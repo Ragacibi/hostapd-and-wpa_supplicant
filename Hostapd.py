@@ -6,7 +6,7 @@ from ConfFile import ConfFile
 
 
 class Hostapd(ConfFile):
-    """Class hostapd
+    """Class Hostapd to configure hostapd
     """
     # Attributes:
     __options = {'a':"auth_algs=",
@@ -39,78 +39,39 @@ class Hostapd(ConfFile):
     # Operations
     def __init__(self, name, server_ip, server_port='80'):
         """Generates a configuration file.
-
         `name` specifies the name of the configuration file.
-
-        Example:
-        ----
-        | **Settings** | *Arguments*             |           |
-        | Library      | configuration_file_name | server_ip | 
-        ----
         """
         ConfFile.__init__(self, name)
         self.proxy = ServerProxy("http://" + server_ip + ":" + server_port, allow_none=False)
 
     def auth_algs(self, auth):
         """Used to specify authentication algorithm
-        Example:
-        ----
-        | auth algs | 1 | #Open   |
-        | auth algs | 2 | #Shared |
-        | auth algs | 3 | #Both   |
-        ----
         """
         self.stream_edit(self.__options['a'] + '.*', self.__options['a'] + auth)
 
     def beacon_interval(self, b_int):
         """Used to set the beacon interval of AP
-        Example:
-        ----
-        | beacon_interval | 100 |
-        ----
         """
         self.stream_edit(self.__options['b'] + '.*', self.__options['b'] + b_int)
 
     def channel(self, chan):
         """Used to specify the operating channel of AP
-        Example:
-        ----
-        | channel | 1 | #center freq 2412MHz |
-        ----
         """
         self.stream_edit(self.__options['c'] + '.*', self.__options['c'] + str(chan))
 
     def driver(self, driv):
         """To sepcify driver
-        ----
-        Example:
-        | driver | nl80211 |
-        ----
         """
         self.stream_edit(self.__options['d'] + '.*', self.__options['d'] + driv)
 
     def interface(self, iface='wlan0'):
         """Used to select the wireless interface
         By default the interface will be `wlan0`
-        ----
-        Example:
-        | interface | wlan0 |
-        ----
         """
         self.stream_edit(self.__options['i'] + '.*', self.__options['i'] + iface)
 
     def mode(self, std):
         """"Used to select operating mode
-        Example:
-        ----
-        | mode | a       | #IEEE802.11a std
-        | mode | b       | #IEEE802.11b std
-        | mode | g       | #IEEE802.11g std
-        | mode | n       | #IEEE802.11n (2.4GHz) std
-        | mode | n2.4GHz | #IEEE802.11n (2.4GHz) std
-        | mode | n5G     | #IEEE802.11n (5GHz) std
-        | mode | ac      | #IEEE802.11ac std
-        ----
         """
         n2g = ['n', 'n2.4', 'n2.4G', 'n2.4GHz']
         n5g = ['n5', 'n5G', 'n5GHz']
@@ -137,34 +98,20 @@ class Hostapd(ConfFile):
     def country_code(self, nation='IN'):
         """Used to set country of operation of AP
         By default the coutry of operation is India (IN).
-        Example:
-        ----
-        | country code | IN | #Operating country is now India |
         """
+        nation = nation.upper()
         self.stream_edit(self.__options['n'] + '.*', self.__options['n'] + nation)
 
     def ap_ssid(self, nw_name):
         """Used to provide ssid for the AP.
-        Example:
-        ----
-        | ap ssid | myAP |
-        ----
         """
         self.stream_edit(self.__options['s'] + '.*', self.__options['s'] + nw_name)
 
     def wpa_key_mgmt(self, wpa_key='WPA2-PSK'):
         """Used to select the WPA security
-        By default, the security will be WPA2-PSK
-        Values to the keyword are case sensitive
-        Example:
-        ----
-        | wpa key mgmt | WPA-PSK      | #Security is now WPA-PSK       |
-        | wpa key mgmt | NONE         | #Security is None              |
-        | wpa key mgmt | WPA2-PSK     | #Security is WPA2-PSK          |
-        | wpa key mgmt | WPA/WPA2-PSK | #Security is WPA/WPA2-PSK      |
-        When WPA/WPA2-PSK is used, select appropriate pairwise mechanisms.
-        ----
+        By default, the security will be WPA2-PSK.
         """
+        wpa_key = wpa_key.upper()
         if wpa_key == 'NONE':
             self.delete(self.__options['k'] + '.*')
             self.delete(self.__options['w'] + '.*')
@@ -217,100 +164,63 @@ class Hostapd(ConfFile):
 
     def auth_server(ip, port):
         '''Used to Set Radius Server address and port
-        Example:
-        ----
-        | auth server | 192.168.43.3 | 1812 |
         '''
         self.stream_edit(self.__options['asa'] + '.*', self.__options['asa'] + str(ip))
         self.stream_edit(self.__options['asp'] + '.*', self.__options['asp'] + str(port))
 
     def auth_server_secret(shared_secret):
         '''Used to Set Radius Server password
-        Example:
-        ----
-        | auth server secret | sharedsecret |
         '''
         self.stream_edit(self.__options['ass'] + '.*', self.__options['ass'] + str(shared_secret))
 
     def eap_msg(msg):
         '''Used to customize Radius server's message
-        Example:
-        ----
-        | eap msg | my_server_says_hi |
         '''
         self.stream_edit(self.__options['msg'] + '.*', self.__options['msg'] + msg)
 
     def wpa_passphrase(self, wpa_pass):
         """Used to set the password when any one of WPA mechanism is used.
-        Example:
-        ----
-        | wpa passphrase | password |
-        ---
         """
         self.stream_edit(self.__options['w'] + '.*', self.__options['w'] + wpa_pass)
 
     def basic_rates(self, *br):
         """"Used to set basic rates for AP
         Values to the keyword can be a list
-        Example:
-        ----
-        | basic rates | 10 | 20 | 55 | 110 |
-        ----
         """
         self.stream_edit(self.__options['t'] + '.*', self.__options['t'] + ' '.join(br))
 
     def supported_rates(self, *sr):
         """"Used to set supported rates for AP
-        Example:
-        ----
-        | supported rates | 10 | 20 | 55 | 110 |
-        ----
         Values to the keyword can be a list
         """
         self.stream_edit(self.__options['u'] + '.*', self.__options['u'] + ' '.join(sr))
 
-    def ht_capabilities(self, capab):
+    def ht_capabilities(self, *capab):
         """Used to set HT Capabilities of AP
         """
-        self.stream_edit(self.__options['ht_capab'] + '.*', self.__options['ht_capab'])
+        ht = ''
+        for _ in capab:
+            ht += '[{}]'.format(_)
+        self.stream_edit(self.__options['ht_capab'] + '.*', ht)
 
     def wpa_pairwise(self, *w_pair):
         """Used to specify the WPA encryption protocol
-        Example:
-        ----
-        | wpa pairwise | CCMP |      |
-        | wpa pairwise | TKIP | CCMP |
-        ----
         """
         self.stream_edit(self.__options['y'] + '.*', self.__options['y'] + ' '.join(w_pair))
 
     def rsn_pairwise(self, r_pair):
         """Used to specify the RSN encryption protocol
-        Example:
-        ----
-        | rsn pairwise | CCMP |
-        ----
         """
         self.stream_edit(self.__options['z'] + '.*', self.__options['z'] + r_pair)
 
     def wep_default_key(self, w_def=0):
         """Used to select the default key for WEP encryption
-        Example:
-        ----
-        | wep default key | 3 |
-        ----
         Default key will be `key 0`
         """
         self.stream_edit(self.__options['wep_def'] + '.*', self.__options['wep_def'] + str(w_def))
 
     def wep_key(self, key, key_no=0):
-        """Used to set WEP keys
-        Can set from 0 - 3 wep keys
-        Example:
-        ----
-        | wep key | 3CB2AB7CDE | 0 |
-        | wep key | FDABE42844 | 1 |
-        ----
+        """Used to set WEP keys. Can set from 0 - 3 wep keys
         By default, key number will be 0
         """
         if key_no == '0':
@@ -334,13 +244,8 @@ class Hostapd(ConfFile):
 
     def serve_ap(self, status):
         """Used to enable and disable the AP
-        Example:
-        ----
-        | AP | start | #Starts the AP |
-        | AP | stop  | #Stops the AP  |
-        ----
-        The Values to the keyword are case sensitive
         """
+        status = status.lower()
         filename = path.join(self.getpath(), self.name)
         with open(filename, 'r') as conf:
             data = conf.readlines()
@@ -349,8 +254,7 @@ class Hostapd(ConfFile):
         self.proxy.board(status, data, hotspot, iface)
 
     def is_connected(self, sta_mac=''):
-        """Used to verify whether the station and AP
-        are connected
+        """Used to verify whether the station and AP are connected
         """
         c_mac = self.proxy.verify_connection()
         if sta_mac in c_mac:
@@ -359,13 +263,7 @@ class Hostapd(ConfFile):
             raise Exception("Station is not connected")
 
     def reset_conf(self, default=False):
-        """Used to reset the AP configuration to None
-        or generate a default AP configuration for new users.
-        Example:
-        ----
-        | reset conf |              | #resets the configuration to None |
-        | reset conf | default=True | #generates default configuration  |
-        ----
+        """Used to reset the AP configuration to None or generate a default AP configuration for new users.
         """
         default = bool(default)
         if not default:
