@@ -1,0 +1,249 @@
+= Hostapd.py
+:author: Ragacibi
+:data-uri:
+:icons: font
+:fonts:
+:link-css:font-awesome.min.css
+
+*Library version:*	1.0 +
+*Library scope:*	global +
+*Named arguments:*	supported +
+
+== Introduction
+
+Robot framework test library for configuring AP using service hostpad
+
+This library utilizes Python's  https://docs.python.org/2/library/os.path.html[path] class from https://docs.python.org/2/library/os.html[os] module and https://docs.python.org/2/library/xmlrpclib.html[xmlrpclib] module.
+
+The library has following main usages:
+
+* [*] Configuring http://w1.fi/hostapd/[hostapd] service in the target board.
+* [*] The configuration file is generated as stated https://w1.fi/cgit/hostap/plain/hostapd/hostapd.conf[here].
+* [*] The service can be started and stopped as well.
+* [*] New users of the service can do a trial with the help of keyword <<reset-conf,Reset Conf>>
+
+[NOTE]
+This library is not included in Robot Framework.
+
+== Limitations
+
+* The server should be coded separately.
+* The Values to the keyword are case sensitive.
+* The default configuration uses *WPA2-PSK* security, the network name will be +
+*AccessPoint*, the password is *12345678* and the *IEEE802.11g* standard will be used.
+* Also, have a look at the interface being used when using default configuration.
+
+
+=== Table of contents
+
+* <<initial-set-up,Initial Set-up>>
+* <<shortcuts,Shortcuts>>
+* <<keywords,Keywords>>
+
+[[initial-set-up]]
+== Initial Set-up
+
+* Robot Framework will be running in one host.
+* The service will be initiated in the target board.
+* The target board is the xmlrpc server.
+* The host machine is xmlrpc client.
+* When adding this library with test suites, the configuration file name, the xmlrpc server ip and port should be specified.
+
+|===
+| [big]*Library* | [big]*Hostapd.py* | [big]*configuration_file_name* | [big]*server_ip* | [big]*server_port=80*
+|===
+
+*  Remote procedures are defined as below.
+----
+remote(status, data, ap=True)
+verify_connection()
+----
+[[shortcuts]]
+== Shortcuts
+
+<<ap-ssid,**A**p SSID>> --
+<<auth-algs,**A**uth Algs>> --
+<<auth-server,**A**uth Server>> --
+<<auth-server-secret,**A**uth Server Secret>> --
+<<basic-rates,**B**asic Rates>> --
+<<beacon-interval,**B**eacon Interval>> --
+<<channel,**C**hannel>> +
+<<country-code,**C**ountry Code>> --
+<<driver,**D**river>> --
+<<eap-msg, **E**AP Msg>> --
+<<interface,**I**nterface>> --
+<<is-connected,**I**s Connected>> --
+<<mode,**M**ode>> --
+<<reset-conf,**R**eset Conf>> +
+<<rsn-pairwise,**R**SN Pairwise>> --
+<<serve-ap,**S**erve Ap>> --
+<<supported-rates,**S**upported Rates>> --
+<<wep-default-key,**W**ep-Default-Key>> --
+<<wep-key,**W**ep Key>> --
+<<wpa-key-mgmt,**W**pa Key Mgmt>> --
+<<wpa-pairwise, **W**pa Pairwise>> +
+<<wpa-passphrase, **W**pa Passphrase>>
+
+[[keywords]]
+== Keywords
+[options="header",cols="2,3,9a"]
+|===
+| Keyword
+| Arguments
+| Documentation
+
+|[[ap-ssid]]
+*Ap SSID*
+| nw_name
+| Used to provide ssid for the AP.
+
+|[[auth-algs]]
+*Auth Algs*
+| auth
+| Used to specify authentication algorithm
+
+[cols="2,1,2"]
+!===
+! Auth Algs ! 1 ! #Open
+! Auth Algs ! 2 ! #Shared
+! Auth Algs ! 3 ! #Both
+!===
+
+
+|[[auth-server]]
+*Auth Server*
+| ip, port
+| Used to Set Radius Server address and port
+
+[cols="2,3,1"]
+!===
+! Auth Server ! 192.168.34.1 ! 1812
+! Auth Server ! 172.16.5.3   ! 1812
+! Auth Server ! 10.0.0.5     ! 1812
+!===
+
+|[[auth-server-secret]]
+*Auth Server Secret*
+| shared_secret
+| Used to provide Radius Server password
+
+|[[basic-rates]]
+*Basic Rates*
+|
+|Used to set basic rates for AP. +
+Values to the keyword can be a list
+
+|[[beacon-interval]]
+*Beacon Interval*
+| b_int
+| Used to set the beacon interval of AP
+
+|[[channel]]
+*Channel*
+| chan
+| Used to specify the operating channel of AP
+
+|[[country-code]]
+*Country Code*
+| nation=IN
+| Used to set country of operation of AP +
+By default the country of operation is India `IN`.
+
+|[[driver]]
+*Driver*
+| driv
+| To specify driver
+
+|[[eap-msg]]
+*Eap Msg*
+| msg
+| Used to customize Radius server's message
+
+|[[interface]]
+*Interface*
+| iface=wlan0
+| Used to select the wireless interface +
+By default the interface will be `wlan0`
+
+|[[is-connected]]
+*Is Connected*
+| sta_mac=' '
+| Used to verify whether the station and AP +
+are connected
+
+|[[mode]]
+*Mode*
+| std
+| Used to select operating mode (IEEE802.11 std)
+
+[cols="1,1,3"]
+!===
+! Mode ! a       ! #IEEE802.11a std
+! Mode ! b 	 ! #IEEE802.11b std
+! Mode ! g 	 ! #IEEE802.11g std
+! Mode ! n 	 ! #IEEE802.11n (2.4GHz)std
+! Mode ! n2.4GHz ! #IEEE802.11n (2.4GHz)std
+! Mode ! n5G	 ! #IEEE802.11n (5GHz) std
+!===
+
+
+|[[reset-conf]]
+*Reset Conf*
+| default=False
+| Used to reset the AP configuration to None +
+or generate a default AP configuration for new users.
+
+|[[rsn-pairwise]]
+*RSN Pairwise*
+| r_pair
+| Used to specify the RSN encryption mechanism
+
+|[[serve-ap]]
+*Serve AP*
+| status
+| Used to enable and disable the AP
+
+[cols="1,1,3"]
+!===
+! Serve AP ! start ! #Starts the AP
+! Serve AP ! stop  ! #Stops the AP
+!===
+
+|[[supported-rates]]
+*Supported Rates*
+| *sr
+| Used to set supported rates for AP
+
+[cols="3,1,1,1,1"]
+!===
+! Supported Rates ! 10 ! 20 ! 55 ! 110 !
+!===
+
+|[[wep-default-key]]
+*Wep Default Key*
+| w_def=0
+| Used to select the default key for WEP encryption
+
+|[[wep-key]]
+*Wep Key*
+| key,key_no=0
+| Used to set WEP keys +
+Can set from 0 - 3 wep keys
+
+|[[wpa-key-mgmt]]
+*Wpa Key Mgmt*
+| wpa_key=WPA2-PSK
+| Used to select the WPA security +
+By default, the security will be WPA2-PSK
+
+|[[wpa-pairwise]]
+*Wpa Pairwise*
+| *w_pair
+| Used to specify the WPA encryption mechanism
+
+|[[wpa-passphrase]]
+*Wpa Passphrase*
+| wpa_pass
+| Used to set the password when any one of WPA mechanism is used.
+
+|===
