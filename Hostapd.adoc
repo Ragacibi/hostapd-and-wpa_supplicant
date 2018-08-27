@@ -71,6 +71,7 @@ verify_connection()
 <<country-code,**C**ountry Code>> --
 <<driver,**D**river>> --
 <<eap-msg, **E**AP Msg>> --
+<<ht-capabilities,**H**T Capabilities>> --
 <<interface,**I**nterface>> --
 <<is-connected,**I**s Connected>> --
 <<mode,**M**ode>> --
@@ -158,6 +159,16 @@ By default the country of operation is India `IN`.
 *Eap Msg*
 | msg
 | Used to customize Radius server's message
+
+|[[ht-capabilities]]
+*HT Capabilities*
+| *capab
+| Used to specify HT capabilities of AP
+
+[cols="2,1,2"]
+!===
+! HT Capabilities ! HT40+ ! SHORT-GI-20
+!===
 
 |[[interface]]
 *Interface*
