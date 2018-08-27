@@ -201,7 +201,7 @@ class Hostapd(ConfFile):
         ht = ''
         for _ in capab:
             ht += '[{}]'.format(_)
-        self.stream_edit(self.__options['ht_capab'] + '.*', ht)
+        self.stream_edit(self.__options['ht_capab'] + '.*', self.__options['ht_capab'] + ht)
 
     def wpa_pairwise(self, *w_pair):
         """Used to specify the WPA encryption protocol
