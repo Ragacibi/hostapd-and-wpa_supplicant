@@ -41,6 +41,7 @@ class WpaSupplicant(ConfFile):
         """
         ConfFile.__init__(self, name)
         self.proxy = ServerProxy("http://" + str(server_ip) + ":" + str(server_port), allow_none=False)
+        self.__network_block()
 
     def ssid(self, nw_name):
         """Used to connect the station to the ssid given.
@@ -56,12 +57,16 @@ class WpaSupplicant(ConfFile):
     def ctrl_interface(self, ctrl_iface_sta):
         """Used to set the control interface of STA
         """
+        self.delete('^}.*')
         self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_sta)
+        self.stream_edit('^}.*', '}\n')
 
     def ctrl_interface_group(self, ctrl_iface_grp_sta):
         """Used to set the control interface of STA
         """
+        self.delete('^}.*')
         self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta)
+        self.stream_edit('^}.*', '}\n')
 
     def key_mgt(self, key='WPA-PSK'):
         """Used to select the WPA security
