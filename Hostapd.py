@@ -34,8 +34,8 @@ class Hostapd(ConfFile):
                  'msg':'eap_message=',
                  'ht_capab':'ht_capab=',
                  'wmm':'wmm_enabled=',
-                 'ctrl_iface':'ctrl_interface='
-                 'ctrl_iface_grp':'ctrl_interface_group='
+                 'ctrl_iface':'ctrl_interface=',
+                 'ctrl_iface_grp':'ctrl_interface_group=',
                 }
 
     # Operations
@@ -61,15 +61,15 @@ class Hostapd(ConfFile):
         """
         self.stream_edit(self.__options['c'] + '.*', self.__options['c'] + str(chan))
 
-    def ap_ctrl_interface(self, ctrl_iface-ap):
+    def ap_ctrl_interface(self, ctrl_iface_ap):
         """Used to set the control interface of AP
         """
-        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface-ap)
+        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_ap)
 
-    def ctrl_interface_group(self, ctrl_iface_grp-ap):
+    def ap_ctrl_interface_group(self, ctrl_iface_grp_ap):
         """Used to set the control interface of AP
         """
-        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp-ap)
+        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_ap)
 
     def driver(self, driv):
         """To sepcify driver

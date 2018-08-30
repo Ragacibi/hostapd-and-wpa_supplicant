@@ -6,41 +6,6 @@ from ConfFile import ConfFile
 
 class WpaSupplicant(ConfFile):
     """Class WpaSupplicant
-    Example:- Open
-    ----------
-    | ssid | QA-AP |
-    | key mgt | NONE |
-    -----------
-
-    Example:- WEP-SHARED
-    ------
-    | ssid | QA-AP
-    | key mgt | NONE |
-    | wep | 123456 | 0 |
-    | wep |145adcf | 1 |
-    | wep default txid | 1
-    | auth alg |
-    ---------
-
-    Example:- WPA-PSK / WPA2-PSK
-    ----------
-    | ssid | QA-AP |
-    | key mgt | WPA-PSK |
-    | password | 1234567 |
-    | pairwise | TKIP | CCMP |
-    | group    | TKIP | CCMP |
-    -----------
-
-    Example:- Radius-Server
-    ---------
-    | ssid | QA-AP |
-    | key mgt | WPA-EAP |
-    | eap type | TTLS    |
-    | user id  | user    |
-    | user pass| 1234567 |
-    -----------
-
-
     """
     # Attributes:
 
@@ -57,7 +22,9 @@ class WpaSupplicant(ConfFile):
                  'user':'identity=',
                  'pass_key':'password=',
                  'pair':'pairwise=',
-                 'g':'group='
+                 'g':'group=',
+                 'ctrl_iface':'ctrl_interface=',
+                 'ctrl_iface_grp':'ctrl_interface_group=',
                  }
     
     # Operations
@@ -85,6 +52,16 @@ class WpaSupplicant(ConfFile):
         self.delete('^}.*')
         self.stream_edit(self.__options['s'] + '.*', self.__options['s'] + '"' + nw_name + '"')
         self.stream_edit('^}.*', '}\n')
+
+    def ctrl_interface(self, ctrl_iface_sta):
+        """Used to set the control interface of STA
+        """
+        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_sta)
+
+    def ctrl_interface_group(self, ctrl_iface_grp_sta):
+        """Used to set the control interface of STA
+        """
+        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta)
 
     def key_mgt(self, key='WPA-PSK'):
         """Used to select the WPA security
