@@ -37,7 +37,7 @@ class ConfFile:
             conf.writelines(seq)
 
 
-    def stream_edit(self, pat, new):
+    def stream_edit(self, pat, new, prepend=False):
         """function stream_edit
 
         pat: pattern
@@ -49,7 +49,10 @@ class ConfFile:
         matched = self.like(pat, data)
         if not matched:
             try:
-                data.append(new + '\n')
+                if not prepend:
+                    data.append(new + '\n')
+                else:
+                    data.insert(0, new + '\n')
             except TypeError as err:
                 raise err
                 #data.append(' '.join(new) + '\n')

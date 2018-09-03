@@ -57,16 +57,16 @@ class WpaSupplicant(ConfFile):
     def ctrl_interface(self, ctrl_iface_sta):
         """Used to set the control interface of STA
         """
-        self.delete('^}.*')
-        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_sta)
-        self.stream_edit('^}.*', '}\n')
+        #self.delete('^}.*')
+        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_sta, prepend=True)
+        #self.stream_edit('^}.*', '}\n')
 
     def ctrl_interface_group(self, ctrl_iface_grp_sta):
         """Used to set the control interface of STA
         """
-        self.delete('^}.*')
-        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta)
-        self.stream_edit('^}.*', '}\n')
+        #self.delete('^}.*')
+        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta, prepend=True)
+        #self.stream_edit('^}.*', '}\n')
 
     def key_mgt(self, key='WPA-PSK'):
         """Used to select the WPA security

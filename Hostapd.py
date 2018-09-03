@@ -49,12 +49,12 @@ class Hostapd(ConfFile):
     def auth_algs(self, auth):
         """Used to specify authentication algorithm
         """
-        self.stream_edit(self.__options['a'] + '.*', self.__options['a'] + auth)
+        self.stream_edit(self.__options['a'] + '.*', self.__options['a'] + str(auth))
 
     def beacon_interval(self, b_int):
         """Used to set the beacon interval of AP
         """
-        self.stream_edit(self.__options['b'] + '.*', self.__options['b'] + b_int)
+        self.stream_edit(self.__options['b'] + '.*', self.__options['b'] + str(b_int))
 
     def channel(self, chan):
         """Used to specify the operating channel of AP
@@ -69,7 +69,7 @@ class Hostapd(ConfFile):
     def ap_ctrl_interface_group(self, ctrl_iface_grp_ap):
         """Used to set the control interface of AP
         """
-        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_ap)
+        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + str(ctrl_iface_grp_ap))
 
     def driver(self, driv):
         """To sepcify driver
@@ -159,33 +159,33 @@ class Hostapd(ConfFile):
             self.delete(self.__options['asp'] + '.*')
             self.delete(self.__options['ass'] + '.*')
             self.delete(self.__options['msg'] + '.*')
-        if wpa_key == 'WPA-Radius':
+        if wpa_key == 'WPA-RADIUS':
             self.stream_edit(self.__options['x'] + '.*', self.__options['x'] + '1')
             self.stream_edit(self.__options['wpa'] + '.*', self.__options['wpa'] + '1')
             self.stream_edit(self.__options['k'] + '.*', self.__options['k'] + 'WPA-EAP')
-        if wpa_key == 'WPA2-Radius':
+        if wpa_key == 'WPA2-RADIUS':
             self.stream_edit(self.__options['x'] + '.*', self.__options['x'] + '1')
             self.stream_edit(self.__options['wpa'] + '.*', self.__options['wpa'] + '2')
             self.stream_edit(self.__options['k'] + '.*', self.__options['k'] + 'WPA-EAP')
-        if wpa_key == 'WPA/WPA2-Radius':
+        if wpa_key == 'WPA/WPA2-RADIUS':
             self.stream_edit(self.__options['x'] + '.*', self.__options['x'] + '1')
             self.stream_edit(self.__options['wpa'] + '.*', self.__options['wpa'] + '3')
             self.stream_edit(self.__options['k'] + '.*', self.__options['k'] + 'WPA-EAP')
         self.delete(self.__options['wep_def'] + '.*')
         self.delete(self.__options['key'] + '.*')
 
-    def auth_server(ip, port):
+    def auth_server(self, ip, port):
         '''Used to Set Radius Server address and port
         '''
         self.stream_edit(self.__options['asa'] + '.*', self.__options['asa'] + str(ip))
         self.stream_edit(self.__options['asp'] + '.*', self.__options['asp'] + str(port))
 
-    def auth_server_secret(shared_secret):
+    def auth_server_secret(self, shared_secret):
         '''Used to Set Radius Server password
         '''
         self.stream_edit(self.__options['ass'] + '.*', self.__options['ass'] + str(shared_secret))
 
-    def eap_msg(msg):
+    def eap_msg(self, msg):
         '''Used to customize Radius server's message
         '''
         self.stream_edit(self.__options['msg'] + '.*', self.__options['msg'] + msg)
