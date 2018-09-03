@@ -28,7 +28,6 @@ This library is not included in Robot Framework.
 == Limitations
 
 * The server should be coded separately.
-* The Values to the keyword are case sensitive.
 * The default configuration uses *WPA2-PSK* security, the network name will be +
 *AccessPoint*, the password is *12345678* and the *IEEE802.11g* standard will be used.
 * Also, have a look at the interface being used when using default configuration.
@@ -246,6 +245,14 @@ Can set from 0 - 3 wep keys
 | wpa_key=WPA2-PSK
 | Used to select the WPA security +
 By default, the security will be WPA2-PSK
+
+[cols="3,2"]
+!===
+! Wpa Key Mgmt ! WPA-PSK
+! Wpa Key Mgmt ! WPA-Radius
+! Wpa Key Mgmt ! WPA2-Radius
+! Wpa Key Mgmt ! NONE
+!===
 
 |[[wpa-pairwise]]
 *Wpa Pairwise*
