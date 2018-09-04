@@ -3,6 +3,18 @@ from os import path
 from xmlrpclib import ServerProxy
 from ConfFile import ConfFile
 
+def singleton(cls):
+    """function used to make a
+    class to have only one object
+    """
+    instances = {}
+    def getinstance():
+        """Get the instance of class
+        """
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return getinstance
 
 class WpaSupplicant(ConfFile):
     """Class WpaSupplicant
@@ -10,7 +22,7 @@ class WpaSupplicant(ConfFile):
     # Attributes:
 
     peripheral = 'wlan0'
-    
+
     __options = {'p':'psk=',
                  's':'ssid=',
                  'algs':'auth_alg=SHARED',
@@ -25,14 +37,14 @@ class WpaSupplicant(ConfFile):
                  'g':'group=',
                  'ctrl_iface':'ctrl_interface=',
                  'ctrl_iface_grp':'ctrl_interface_group=',
-                 }
-    
+                }
     # Operations
     def __init__(self, name, server_ip, server_port=80):
         """Generates a configuration file. `name` specifies the name of the configuration file.
         """
         ConfFile.__init__(self, name)
-        self.proxy = ServerProxy("http://" + str(server_ip) + ":" + str(server_port), allow_none=False)
+        self.proxy = ServerProxy("http://" + str(server_ip) + ":" + str(server_port),
+                                 allow_none=False)
         self.__network_block()
 
     def ssid(self, nw_name):
@@ -45,16 +57,14 @@ class WpaSupplicant(ConfFile):
     def ctrl_interface(self, ctrl_iface_sta):
         """Used to set the control interface of STA
         """
-        #self.delete('^}.*')
-        self.stream_edit(self.__options['ctrl_iface'] + '.*', self.__options['ctrl_iface'] + ctrl_iface_sta, prepend=True)
-        #self.stream_edit('^}.*', '}\n')
+        self.stream_edit(self.__options['ctrl_iface'] + '.*',
+                         self.__options['ctrl_iface'] + ctrl_iface_sta, prepend=True)
 
     def ctrl_interface_group(self, ctrl_iface_grp_sta):
         """Used to set the control interface of STA
         """
-        #self.delete('^}.*')
-        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*', self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta, prepend=True)
-        #self.stream_edit('^}.*', '}\n')
+        self.stream_edit(self.__options['ctrl_iface_grp'] + '.*',
+                         self.__options['ctrl_iface_grp'] + ctrl_iface_grp_sta, prepend=True)
 
     def key_mgt(self, key='WPA-PSK'):
         """Used to select the WPA security. By default, the security will be WPA-PSK
@@ -179,7 +189,8 @@ class WpaSupplicant(ConfFile):
         self.stream_edit('^}.*', '}')
 
     def auth_alg(self):
-        """ Used to set the authentication algorithm to shared. Only used for WEP authentication mode.
+        """ Used to set the authentication algorithm to shared.
+        Only used for WEP authentication mode.
         """
         self.delete('^}.*')
         self.stream_edit(self.__options['algs'] + '.*', self.__options['algs'])
@@ -189,7 +200,7 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['user'] + '.*')
         self.delete(self.__options['pass_key'] + '.*')
         self.delete(self.__options['pair'] + '.*')
-        self.delete(self.__options['g'] + '.*')    
+        self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}')
 
     def wep_default_txid(self, w_def=0):
@@ -203,7 +214,7 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['user'] + '.*')
         self.delete(self.__options['pass_key'] + '.*')
         self.delete(self.__options['pair'] + '.*')
-        self.delete(self.__options['g'] + '.*')    
+        self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}')
 
     def iface(self, interface):
@@ -221,7 +232,7 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['wep_txid'] + '.*')
         self.delete(self.__options['p'] + '.*')
         self.delete(self.__options['pair'] + '.*')
-        self.delete(self.__options['g'] + '.*')       
+        self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}')
 
     def eap_phase2(self, default="True"):
@@ -235,7 +246,7 @@ class WpaSupplicant(ConfFile):
             self.delete(self.__options['wep_txid'] + '.*')
             self.delete(self.__options['p'] + '.*')
             self.delete(self.__options['pair'] + '.*')
-            self.delete(self.__options['g'] + '.*')       
+            self.delete(self.__options['g'] + '.*')
         elif default == "False":
             self.delete('^phase2.*')
             self.delete(self.__options['algs'] + '.*')
@@ -243,9 +254,9 @@ class WpaSupplicant(ConfFile):
             self.delete(self.__options['wep_txid'] + '.*')
             self.delete(self.__options['p'] + '.*')
             self.delete(self.__options['pair'] + '.*')
-            self.delete(self.__options['g'] + '.*')       
+            self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}')
-        
+
     def user_id(self, name):
         """This will set the username for radius server authentication.
         The given username should present in radius server.
@@ -258,7 +269,7 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['wep_txid'] + '.*')
         self.delete(self.__options['p'] + '.*')
         self.delete(self.__options['pair'] + '.*')
-        self.delete(self.__options['g'] + '.*')       
+        self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}\n')
 
     def user_pass(self, key):
@@ -274,7 +285,7 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['wep_txid'] + '.*')
         self.delete(self.__options['p'] + '.*')
         self.delete(self.__options['pair'] + '.*')
-        self.delete(self.__options['g'] + '.*')       
+        self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}\n')
 
     def serve_sta(self, status):
