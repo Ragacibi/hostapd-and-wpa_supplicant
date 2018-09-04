@@ -3,25 +3,13 @@ from os import path
 from xmlrpclib import ServerProxy
 from ConfFile import ConfFile
 
-def singleton(cls):
-    """function used to make a
-    class to have only one object
-    """
-    instances = {}
-    def getinstance():
-        """Get the instance of class
-        """
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-    return getinstance
 
 class WpaSupplicant(ConfFile):
     """Class WpaSupplicant
     """
     # Attributes:
 
-    peripheral = 'wlan0'
+    _peripheral = 'wlan0'
 
     __options = {'p':'psk=',
                  's':'ssid=',
@@ -217,10 +205,16 @@ class WpaSupplicant(ConfFile):
         self.delete(self.__options['g'] + '.*')
         self.stream_edit('^}.*', '}')
 
+    # @property
+    # def iface(self):
+    #     """Returns selected wireless interface.
+    #     """
+    #     return self.__class__._peripheral
+    # @iface.setter
     def iface(self, interface):
         """Used to select the wireless interface. By default the interface will be `wlan0`
         """
-        self.peripheral = interface
+        self.__class__._peripheral = interface
 
     def eap_type(self, mode):
         """Used to set the type protocol for eap.
@@ -295,7 +289,7 @@ class WpaSupplicant(ConfFile):
         with open(filename, 'r') as conf:
             data = conf.readlines()
         hotspot = 'False'
-        self.proxy.board(status, data, hotspot, self.peripheral)
+        self.proxy.board(status, data, hotspot, self._peripheral)
 
     def __network_block(self):
         """Used to add the network block in config file"""
