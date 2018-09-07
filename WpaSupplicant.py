@@ -3,11 +3,23 @@ from os import path
 from xmlrpclib import ServerProxy
 from ConfFile import ConfFile
 
+class Singleton(type):
+    def __init__(cls, name, bases, dict):
+        super(Singleton, cls).__init__(name, bases, dict)
+        cls._instance = None
+
+def __call__(cls, *args, **kw):
+    if cls._instance is None:
+        cls._instance = super(Singleton, cls).__call__(*args, **kw)
+    return cls._instance
+
 
 class WpaSupplicant(ConfFile):
     """Class WpaSupplicant
     """
     # Attributes:
+
+    __metaclass__ = Singleton
 
     _peripheral = 'wlan0'
 

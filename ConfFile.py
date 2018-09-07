@@ -2,7 +2,7 @@ import re
 import os
 
 
-class ConfFile:
+class ConfFile(object):
     """Abstract class ConfFile
     """
     # Attributes:
