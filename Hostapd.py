@@ -234,18 +234,13 @@ class Hostapd(object, ConfFile):
         """
         self.stream_edit(self.__options['wep_def'] + '.*', self.__options['wep_def'] + str(w_def))
 
-    def wep_key(self, key, key_no=0):
+    def wep_key(self, key, key_no='0'):
         """Used to set WEP keys. Can set from 0 - 3 wep keys
         By default, key number will be 0
         """
-        if key_no == '0':
+        key_list = ['0', '1', '2', '3']
+        if key_no in key_list:
             self.stream_edit(self.__options['key'] + str(key_no) + '.*', self.__options['key'] + str(key_no)  + '=' + key)
-        if key_no == '1':
-            self.stream_edit(self.__options['key'] + str(key_no) + '.*', self.__options['key'] + str(key_no) + '=' + key)
-        if key_no == '2':
-            self.stream_edit(self.__options['key'] + str(key_no) + '.*', self.__options['key'] + str(key_no) + '=' + key)
-        if key_no == '3':
-            self.stream_edit(self.__options['key'] + str(key_no) + '.*', self.__options['key'] + str(key_no) + '=' + key)
         self.delete(self.__options['k'] + '.*')
         self.delete(self.__options['w'] + '.*')
         self.delete(self.__options['y'] + '.*')
