@@ -6,7 +6,7 @@ from ConfFile import ConfFile
 from Singleton import Singleton
 
 
-class Hostapd(object, ConfFile):
+class Hostapd(ConfFile):
     """Class Hostapd to configure hostapd
     """
     # Attributes:
