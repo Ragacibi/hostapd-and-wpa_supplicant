@@ -14,7 +14,7 @@ from Singleton import Singleton
 #         cls._instance = super(Singleton, cls).__call__(*args, **kw)
 #     return cls._instance
 
-class WpaSupplicant(object, ConfFile):
+class WpaSupplicant(ConfFile):
     """Class WpaSupplicant
     """
     # Attributes:
